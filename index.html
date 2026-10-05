@@ -374,7 +374,7 @@ const firebaseConfig = {
         <i class="ri-information-line text-xl mt-0.5 text-[#d97706]"></i>
         <div>
           <strong class="text-[#78350f]">Siparişi Onayla</strong> butonuna bastığınızda siparişiniz sistemimize düşer.<br>
-          <span class="text-stone-600 text-xs mt-1 block">📲 Onay için müşteri temsilcimiz WhatsApp üzerinden iletişime geçecektir. MNG/Yurtiçi Kargo güvencesiyle gönderilir.</span>
+          <span class="text-stone-600 text-xs mt-1 block">📲 Onay için müşteri temsilcimiz WhatsApp üzerinden iletişime geçecektir.</span>
         </div>
       </div>
       <button type="submit" id="submitBtn" class="btn-submit" disabled>ÜRÜN SEÇMENİZ GEREKİYOR</button>
@@ -834,5 +834,122 @@ init();
 <script>
 function startCountdown(dakika) { let targetTime; let stored = localStorage.getItem("countdownEndTime"); if(stored) targetTime = parseInt(stored); else { targetTime = Date.now() + (dakika || 1294) * 60 * 1000; localStorage.setItem("countdownEndTime", targetTime); } function update() { let rem = targetTime - Date.now(); if(rem <= 0) { document.getElementById("hours").textContent = "00"; document.getElementById("minutes").textContent = "00"; document.getElementById("seconds").textContent = "00"; localStorage.removeItem("countdownEndTime"); clearInterval(int); return; } document.getElementById("hours").textContent = String(Math.floor(rem / 3600000)).padStart(2,'0'); document.getElementById("minutes").textContent = String(Math.floor((rem % 3600000) / 60000)).padStart(2,'0'); document.getElementById("seconds").textContent = String(Math.floor((rem % 60000) / 1000)).padStart(2,'0'); } update(); let int = setInterval(update, 1000); } startCountdown(localStorage.getItem("countdownEndTime") ? 0 : 1294);
 </script>
+<!-- ==================== WHATSAPP FLOATING BUTTON (TEK PARÇA) ==================== -->
+<style>
+  .wa-float-btn {
+    position: fixed !important;
+    bottom: 95px !important;
+    right: 18px !important;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999 !important;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.5);
+    border: 2px solid rgba(255,255,255,0.7);
+    animation: waFloatAnim 2.6s ease-in-out infinite, waPulseAnim 2s infinite;
+    transition: transform 0.3s ease;
+  }
+  .wa-float-btn svg {
+    width: 34px;
+    height: 34px;
+    fill: #ffffff;
+    display: block;
+    animation: waShakeAnim 3s ease-in-out infinite;
+  }
+  .wa-float-btn:hover {
+    transform: scale(1.12) rotate(6deg);
+    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.7);
+  }
+  .wa-float-btn::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid #25D366;
+    animation: waRingAnim 1.9s ease-out infinite;
+    pointer-events: none;
+  }
+  .wa-float-tip {
+    position: absolute;
+    right: 74px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1c1917;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .wa-float-btn:hover .wa-float-tip {
+    opacity: 1;
+    right: 78px;
+  }
+
+  @keyframes waFloatAnim {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-9px); }
+  }
+  @keyframes waPulseAnim {
+    0%   { box-shadow: 0 8px 22px rgba(37,211,102,0.5), 0 0 0 0 rgba(37,211,102,0.7); }
+    70%  { box-shadow: 0 8px 22px rgba(37,211,102,0.5), 0 0 0 18px rgba(37,211,102,0); }
+    100% { box-shadow: 0 8px 22px rgba(37,211,102,0.5), 0 0 0 0 rgba(37,211,102,0); }
+  }
+  @keyframes waRingAnim {
+    0%   { transform: scale(1);   opacity: 1; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+  @keyframes waShakeAnim {
+    0%, 88%, 100% { transform: rotate(0deg); }
+    90% { transform: rotate(-12deg); }
+    92% { transform: rotate(12deg); }
+    94% { transform: rotate(-10deg); }
+    96% { transform: rotate(10deg); }
+    98% { transform: rotate(-6deg); }
+  }
+
+  @media (max-width: 640px) {
+    .wa-float-btn { bottom: 88px !important; right: 14px !important; width: 56px; height: 56px; }
+    .wa-float-btn svg { width: 31px; height: 31px; }
+    .wa-float-tip { display: none; }
+  }
+</style>
+
+<a href="#" id="waFloatBtn" target="_blank" rel="noopener noreferrer" class="wa-float-btn" aria-label="WhatsApp İletişim">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+  <span class="wa-float-tip">💬 Bize WhatsApp'tan Yazın</span>
+</a>
+
+<script>
+  (function () {
+    // ⚠️ BURAYI DEĞİŞTİR: 90 + alan kodu + numara (başında + veya 0 OLMADAN)
+    var WHATSAPP_NUMBER  = "905000000000";
+    var WHATSAPP_MESSAGE = "Merhaba, Elit Adım ürünleri hakkında bilgi almak istiyorum.";
+
+    var btn = document.getElementById('waFloatBtn');
+    if (btn) {
+      btn.setAttribute('href', "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(WHATSAPP_MESSAGE));
+      btn.addEventListener('click', function () {
+        try { if (typeof fbq === 'function') fbq('track', 'Contact'); } catch(e) {}
+        try { if (typeof ttq !== 'undefined') ttq.track('Contact'); } catch(e) {}
+      });
+    }
+  })();
+</script>
+<!-- ==================== /WHATSAPP FLOATING BUTTON ==================== -->
 </body>
 </html>
